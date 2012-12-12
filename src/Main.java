@@ -10,6 +10,6 @@ public class Main {
 		Game game = new Game();
 		FenetrePrincipale f = new FenetrePrincipale(game);
 		new ControleurMenu(game, f.get_menuJeu(), f);
-		new ControleurPlateForme(f._plateForme, game.getJ1(), game.getJ2());
+		new ControleurPlateForme(f._plateForme, game, game.getJ1(), game.getJ2());
 	}
 }

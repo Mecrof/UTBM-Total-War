@@ -2,6 +2,7 @@ package controleur;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -9,16 +10,20 @@ import javax.swing.event.ChangeListener;
 import vue.CadreJoueur;
 import vue.PlateForme;
 
+import model.Game;
 import model.Joueur;
+import model.Salle;
 
 public class ControleurPlateForme implements ActionListener , ChangeListener{
 	
+	private Game game;
 	private Joueur j1, j2;
 	private PlateForme plateforme;
 	private int _joueurCourant;
 	
-	public ControleurPlateForme(PlateForme p, Joueur j1, Joueur j2) {
+	public ControleurPlateForme(PlateForme p, Game g, Joueur j1, Joueur j2) {
 		this.plateforme = p;
+		this.game = g;
 		this.j1 = j1;
 		this.j2 = j2;
 		this._joueurCourant = 1;
@@ -48,19 +53,20 @@ public class ControleurPlateForme implements ActionListener , ChangeListener{
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		//plateforme.get_champsVisuel().dispatchEvent(new ActionEvent(plateforme.get_chj1(), 1, "Chj1"));
-		System.out.println("change");
+		ArrayList<Salle> listSalle;
+		int effectif;
 		if (_joueurCourant == 1)
 		{
-			// ajouter dans Game une methode qui renvoit les salles attaquables
-			//this.plateforme.get_champsMap().afficheSalleDispo(Joueur1, effectif) 
+			effectif = (int)this.plateforme.get_chj1().get_sNbJetonsEtudiants().getValue();
+			listSalle = this.game.getSalleAttaquable(j1, effectif);
 		}
-		else if (_joueurCourant == 2)
+		else
 		{
-			// ajouter dans Game une methode qui renvoit les salles attaquables
-			//this.plateforme.get_champsMap().afficheSalleDispo(Joueur2, effectif) 
+			effectif = (int)this.plateforme.get_chj2().get_sNbJetonsEtudiants().getValue();
+			listSalle = this.game.getSalleAttaquable(j2, effectif);
 		}
-		
+		//this.plateforme.get_champsMap().afficherSalleAttaquable(listSalle);
 	}
+
 
 }

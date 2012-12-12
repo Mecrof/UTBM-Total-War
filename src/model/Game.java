@@ -34,7 +34,7 @@ public class Game {
 		Collections.shuffle(_listSpecialite);
 	}
 	
-	public ArrayList<Salle> calculSalleAttaquable(Joueur joueur, int effectifEngage)
+	private ArrayList<Salle> calculSalleAttaquable(Joueur joueur, int effectifEngage)
 	{
 		ArrayList<Salle> listSalle = new ArrayList<Salle>();
 		for (Integer idSalle : joueur.get_listIdSalleOccupee()) {
@@ -43,10 +43,14 @@ public class Game {
 			{
 				if (effectifEngage >= 2)
 				{
+					if (this.isAttaquable(salle, effectifEngage))
+						listSalle.add(salle);
+					/*
 					if (!salle.get_isOccupe())
 						listSalle.add(salle);
 					else if (salle.get_nombreOccupant()<effectifEngage)
 						listSalle.add(salle);
+						*/
 				}
 			}
 		}
@@ -54,6 +58,31 @@ public class Game {
 			return null;
 		else
 			return listSalle;
+	}
+	
+	public ArrayList<Salle> getSalleAttaquable(Joueur j, int effectif)
+	{
+		ArrayList<Salle> listSalle = new ArrayList<Salle>();
+		if (!j.get_listIdSalleOccupee().isEmpty())
+		{
+			listSalle = this.calculSalleAttaquable(j, effectif);
+		}
+		else
+		{
+			for (Salle salle : this._batiment.get_listePremiereSalle())
+				if (this.isAttaquable(salle, effectif))
+					listSalle.add(this._batiment.get_listePremiereSalle().get(0));
+		}
+		return listSalle;
+	}
+	
+	public boolean isAttaquable(Salle salle, int effectifEngage)
+	{
+		if (!salle.get_isOccupe())
+			return true;//listSalle.add(salle);
+		else if (salle.get_nombreOccupant()<effectifEngage)
+			return true;
+		return false;
 	}
 	
 	public static BufferedImage redimensionnerImage(Image src, int srcWidth, int srcHeight, int width, int height) {
