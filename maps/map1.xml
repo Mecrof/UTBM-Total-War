@@ -1,0 +1,26 @@
+<Batiment>
+	<Salle>
+		<NomSalle>LO43</NomSalle>
+		<IdSalle>3</IdSalle>
+		<AtoutSalle>Geek</AtoutSalle>
+		<Coordonnees>315:295-280:317-245:317-209:298-263:269</Coordonnees>		
+		<SallesAdjacentes>2-3</SallesAdjacentes>
+		<SalleDepart>true</SalleDepart>
+	</Salle>
+	<Salle>
+		<NomSalle>MT45</NomSalle>
+		<IdSalle>1</IdSalle>
+		<AtoutSalle>Matheux</AtoutSalle>
+		<Coordonnees>263:268-210:299-157:269-211:242</Coordonnees>		
+		<SallesAdjacentes>1-3</SallesAdjacentes>
+		<SalleDepart>false</SalleDepart>
+	</Salle>
+	<Salle>
+		<NomSalle>LE02</NomSalle>
+		<IdSalle>2</IdSalle>
+		<AtoutSalle>Bilingue</AtoutSalle>
+		<Coordonnees>237:227-157:271-107:243-188:199</Coordonnees>		
+		<SallesAdjacentes>1-2</SallesAdjacentes>
+		<SalleDepart>false</SalleDepart>
+	</Salle>
+</Batiment>
