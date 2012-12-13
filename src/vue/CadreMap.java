@@ -8,6 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,19 +22,56 @@ import model.Batiment;
 import model.Game;
 import model.Salle;
 
-public class CadreMap extends JPanel {
+public class CadreMap extends JPanel {//implements MouseListener, MouseMotionListener{
 
 	private Game game;
 	private ArrayList<Salle> sallePossedee = new ArrayList<Salle>();
 	private ArrayList<Salle> salleAttaquable = new ArrayList<Salle>();
-
+	private Polygon[] _polySalle;
+	
 	public CadreMap(Game g) {
 		this.game = g;
 		this.setMinimumSize(new Dimension(600, 320));
 		this.setMaximumSize(new Dimension(600, 320));
 		this.setVisible(true);
 		this.setBackground(Color.WHITE);
+		
+		/*
+		addMouseListener( this );
+		addMouseMotionListener( this );
+		*/
 	}
+	
+/*
+////////////////////////////////////////////////////////
+	public void mouseClicked(MouseEvent e) {
+		try
+		{
+			for (int l = 0; l < _polySalle.length; l++) {
+		
+				if (_polySalle[l].contains(e.getX(), e.getY())) {
+					System.out.println("Vous avez cliqué sur la salle : "
+							+ salleAttaquable.get(l).get_id());
+				}
+			}
+			repaint();
+		}
+		catch (NullPointerException n){} 
+	}
+
+	@Override
+	public void mousePressed(MouseEvent event) {}
+	@Override
+	public void mouseReleased(MouseEvent event) {}
+	@Override
+	public void mouseEntered(MouseEvent event) {}
+	@Override
+	public void mouseExited(MouseEvent event) {}
+	@Override
+	public void mouseDragged(MouseEvent event) {}
+	@Override
+	public void mouseMoved(MouseEvent event) {}
+//////////////////////////////////////////////////////*/
 	
 	public void traiterListeSalle(ArrayList<Salle> listeSalles)
 	{
@@ -49,11 +89,11 @@ public class CadreMap extends JPanel {
 		
 		String nomCarte = game.get_batiment().get_nomBatiment();
 		nomCarte = nomCarte+".png";
-		System.out.println(nomCarte);
+		//System.out.println(nomCarte);
 
 		int xFrame = this.getWidth();
 		int yFrame = this.getHeight();
-		System.out.println(xFrame+"   :   "+yFrame);
+		//System.out.println(xFrame+"   :   "+yFrame);
 		
 		try {
 				Image img = ImageIO.read(new File("./maps/"+nomCarte));
@@ -62,12 +102,12 @@ public class CadreMap extends JPanel {
 				int xImage = img.getWidth(null);
 				int yImage = img.getHeight(null);
 				
-				System.out.println(xImage+"   :   "+yImage);
+				//System.out.println(xImage+"   :   "+yImage);
 				
 				float xQuot = ((float)xFrame)/xImage;
 				float yQuot = ((float)yFrame)/yImage;	
 
-				System.out.println(xQuot+"   :   "+yQuot);	
+				//System.out.println(xQuot+"   :   "+yQuot);	
 									  
 				//ArrayList newListe = this.game.get_batiment().get_listeSalles();
 
@@ -97,12 +137,12 @@ public class CadreMap extends JPanel {
 	private void dessinerSalle(Graphics2D g, ArrayList<Salle> newListe, float xQuot, float yQuot)
 	{
 		//System.out.println("##New liste : "+newListe.size() +" : "+newListe);
-		 Polygon[] p = new Polygon[newListe.size()];
+		 _polySalle = new Polygon[newListe.size()];
 		 
 			
 			for(int i=0; i<newListe.size(); i++)
 			{
-				p[i] = new Polygon();
+				_polySalle[i] = new Polygon();
 			    String coordo = "";
 			    Salle temp = (Salle) newListe.get(i);
 
@@ -119,11 +159,11 @@ public class CadreMap extends JPanel {
 				    	int x= (int) (xQuot*_x);
 				    	int y= (int) (yQuot*_y);
 				    	
-						p[i].addPoint(x, y);
+						_polySalle[i].addPoint(x, y);
 				    }
 				}
 
-			    g.drawPolygon(p[i]);	//polygone bordure
+			    g.drawPolygon(_polySalle[i]);	//polygone bordure
 			    //g.fillPolygon(p[i]);	//polygone plein
 			}
 	}
@@ -136,5 +176,29 @@ public class CadreMap extends JPanel {
 	public void dessinerSallePossedee(ArrayList<Salle> listSalle)
 	{
 		this.sallePossedee = listSalle;
+	}
+
+	public Polygon[] get_polySalle() {
+		return _polySalle;
+	}
+
+	public void set_polySalle(Polygon[] _polySalle) {
+		this._polySalle = _polySalle;
+	}
+
+	public ArrayList<Salle> getSallePossedee() {
+		return sallePossedee;
+	}
+
+	public void setSallePossedee(ArrayList<Salle> sallePossedee) {
+		this.sallePossedee = sallePossedee;
+	}
+
+	public ArrayList<Salle> getSalleAttaquable() {
+		return salleAttaquable;
+	}
+
+	public void setSalleAttaquable(ArrayList<Salle> salleAttaquable) {
+		this.salleAttaquable = salleAttaquable;
 	}
 }

@@ -2,6 +2,9 @@ package controleur;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.event.ChangeEvent;
@@ -14,7 +17,7 @@ import model.Game;
 import model.Joueur;
 import model.Salle;
 
-public class ControleurPlateForme implements ActionListener , ChangeListener{
+public class ControleurPlateForme implements ActionListener , ChangeListener, MouseListener, MouseMotionListener{
 	
 	private Game game;
 	private Joueur j1, j2;
@@ -32,6 +35,8 @@ public class ControleurPlateForme implements ActionListener , ChangeListener{
 		this.plateforme.get_chj1().get_sNbJetonsEtudiants().addChangeListener(this);
 		this.plateforme.get_chj2().get_bPasseLeTour().addActionListener(this);
 		this.plateforme.get_chj2().get_sNbJetonsEtudiants().addChangeListener(this);
+		this.plateforme.get_champsMap().addMouseListener(this);
+		this.plateforme.get_champsMap().addMouseMotionListener(this);
 	}
 
 	@Override
@@ -85,6 +90,63 @@ public class ControleurPlateForme implements ActionListener , ChangeListener{
 		}
 
 		//this.plateforme.get_champsMap().afficherSalleAttaquable(listSalle);
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		try
+		{
+			for (int l = 0; l < this.plateforme.get_champsMap().get_polySalle().length; l++) {
+		
+				if (this.plateforme.get_champsMap().get_polySalle()[l].contains(e.getX(), e.getY())) {
+					System.out.println("Vous avez cliqué sur la salle : "
+							+ this.plateforme.get_champsMap().getSalleAttaquable().get(l).get_id());
+				}
+			}
+			//this.plateforme.get_champsMap().repaint();
+		}
+		catch (NullPointerException n){} 
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		if (this.plateforme.get_champsMap().get_polySalle()!=null)
+		for (int l = 0; l < this.plateforme.get_champsMap().get_polySalle().length; l++) {
+			
+			if (this.plateforme.get_champsMap().get_polySalle()[l].contains(e.getX(), e.getY())) {
+				System.out.println("Vous avez cliqué sur la salle : "
+						+ this.plateforme.get_champsMap().getSalleAttaquable().get(l).get_id());
+			}
+		}
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 
