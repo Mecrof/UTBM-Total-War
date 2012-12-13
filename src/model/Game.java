@@ -43,8 +43,17 @@ public class Game {
 			{
 				if (effectifEngage >= 2)
 				{
-					if (this.isAttaquable(salle, effectifEngage))
-						listSalle.add(salle);
+					for (int i = 0; i < salle.get_tabSallesAdjacentes().length ; ++i)
+					{
+						Salle s = this.getSalle(Integer.parseInt(salle.get_tabSallesAdjacentes()[i]));
+						if (!listSalle.contains(s))
+						{
+							System.out.println("## Salle:"+s);
+							if (this.isAttaquable(s, effectifEngage))
+								listSalle.add(s);
+						}
+							
+					}
 					/*
 					if (!salle.get_isOccupe())
 						listSalle.add(salle);
@@ -54,13 +63,14 @@ public class Game {
 				}
 			}
 		}
+		System.out.println("## listeSalle :"+listSalle);
 		if (listSalle.isEmpty())
 			return null;
 		else
 			return listSalle;
 	}
 	
-	public ArrayList<Salle> getSalleAttaquable(Joueur j, int effectif)
+	public ArrayList<Salle> getSalleAttaquable(Joueur j, int effectif) throws Exception
 	{
 		ArrayList<Salle> listSalle = new ArrayList<Salle>();
 		if (!j.get_listIdSalleOccupee().isEmpty())
@@ -69,19 +79,27 @@ public class Game {
 		}
 		else
 		{
-			for (Salle salle : this._batiment.get_listePremiereSalle())
-				if (this.isAttaquable(salle, effectif))
-					listSalle.add(this._batiment.get_listePremiereSalle().get(0));
+			try{
+			for (Integer idSalle : this._batiment.get_listePremiereSalle())
+				if (this.isAttaquable(this.getSalle(idSalle.intValue()), effectif))
+					listSalle.add(this.getSalle(idSalle.intValue()));
+			}catch (Exception e)
+			{
+				throw new Exception("Erreur : Aucune premiere salle sur la map !");
+			}
 		}
 		return listSalle;
 	}
 	
 	public boolean isAttaquable(Salle salle, int effectifEngage)
 	{
-		if (!salle.get_isOccupe())
-			return true;//listSalle.add(salle);
-		else if (salle.get_nombreOccupant()<effectifEngage)
-			return true;
+		if (effectifEngage >= 2)
+		{
+			if (!salle.get_isOccupe())
+				return true;//listSalle.add(salle);
+			else if (salle.get_nombreOccupant()<effectifEngage)
+				return true;
+		}
 		return false;
 	}
 	
@@ -249,6 +267,16 @@ public class Game {
 			if (id == s.get_id())
 				return s;
 		return null;
+	}
+	
+	public ArrayList<Salle> getSalles(ArrayList<Integer> idSalles)
+	{
+		ArrayList<Salle> list = new ArrayList<Salle>();
+		for (Integer id : idSalles)
+		{
+			list.add(this.getSalle(id.intValue()));
+		}
+		return list;
 	}
 	
 public LinkedList<String> afficherListeSalles() {

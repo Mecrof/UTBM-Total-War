@@ -53,18 +53,37 @@ public class ControleurPlateForme implements ActionListener , ChangeListener{
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		ArrayList<Salle> listSalle;
+		ArrayList<Salle> listSalleAttaquable;
+		ArrayList<Salle> listSallePossedee;
 		int effectif;
-		if (_joueurCourant == 1)
+		try{
+			if (_joueurCourant == 1)
+			{
+				effectif = (int)this.plateforme.get_chj1().get_sNbJetonsEtudiants().getValue();
+				listSalleAttaquable = this.game.getSalleAttaquable(j1, effectif);
+				listSallePossedee = this.game.getSalles(j1.get_listIdSalleOccupee());
+			}
+			else
+			{
+				effectif = (int)this.plateforme.get_chj2().get_sNbJetonsEtudiants().getValue();
+				listSalleAttaquable = this.game.getSalleAttaquable(j2, effectif);
+				listSallePossedee = this.game.getSalles(j2.get_listIdSalleOccupee());
+			}
+			System.out.println("lAt: "+listSalleAttaquable);
+			if (listSallePossedee != null)
+				this.plateforme.get_champsMap().dessinerSallePossedee(listSallePossedee);
+			else
+				this.plateforme.get_champsMap().dessinerSallePossedee(new ArrayList<Salle>());
+			if (listSalleAttaquable != null)
+				this.plateforme.get_champsMap().dessinerSalleAttaquable(listSalleAttaquable);
+			else
+				this.plateforme.get_champsMap().dessinerSalleAttaquable(new ArrayList<Salle>());
+			this.plateforme.get_champsMap().repaint();
+		}catch(Exception ex)
 		{
-			effectif = (int)this.plateforme.get_chj1().get_sNbJetonsEtudiants().getValue();
-			listSalle = this.game.getSalleAttaquable(j1, effectif);
+			System.out.println(ex.getMessage());
 		}
-		else
-		{
-			effectif = (int)this.plateforme.get_chj2().get_sNbJetonsEtudiants().getValue();
-			listSalle = this.game.getSalleAttaquable(j2, effectif);
-		}
+
 		//this.plateforme.get_champsMap().afficherSalleAttaquable(listSalle);
 	}
 

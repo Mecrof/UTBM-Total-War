@@ -17,12 +17,12 @@ public class Batiment {
 	//Attributs de Batiments
 	private String _nomBatiment;
 	private ArrayList<Salle> _listeSalles;
-	private ArrayList<Salle> _listePremiereSalle;
+	private ArrayList<Integer> _listePremiereSalle = new ArrayList<Integer>();
 	
 	public Batiment(String nomMap) {
 		this._nomBatiment = nomBatiment(nomMap);
 		this._listeSalles = chargerListeSalles(nomMap);
-		this._listePremiereSalle = null;
+		//this._listePremiereSalle = new ArrayList<Integer>();
 	}
 
 	public static String nomBatiment(String map) {
@@ -32,7 +32,7 @@ public class Batiment {
 	}
 	
 	//M�thode qui va charger les salles dans une liste _listeSalles
-	public static ArrayList<Salle> chargerListeSalles(String fichierCarte) {
+	public ArrayList<Salle> chargerListeSalles(String fichierCarte) {
 		try {
 			File file = new File(fichierCarte);
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -51,12 +51,12 @@ public class Batiment {
 
 					Element balise_salle = (Element) Node_salle;
 
-					NodeList NodeListe_NomSalle = balise_salle.getElementsByTagName("NomSalle");
+					NodeList NodeListe_NomSalle = balise_salle.getElementsByTagName("Nom");
 						Element balise_NomSalle = (Element) NodeListe_NomSalle.item(0);
 						NodeList NodeListe_NomSalle_child  = balise_NomSalle.getChildNodes();
 						String NomSalle = ((Node) NodeListe_NomSalle_child.item(0)).getNodeValue();
 						   
-					NodeList NodeListe_IdSalle = balise_salle.getElementsByTagName("IdSalle");
+					NodeList NodeListe_IdSalle = balise_salle.getElementsByTagName("Id");
 						Element balise_IdSalle = (Element) NodeListe_IdSalle.item(0);
 						NodeList NodeListe_IdSalle_child = balise_IdSalle.getChildNodes();
 						int IdSalle = Integer.parseInt(((Node) NodeListe_IdSalle_child.item(0)).getNodeValue());
@@ -70,6 +70,7 @@ public class Batiment {
 						Element balise_coordonnes = (Element) NodeListe_Coordonnes.item(0);
 						NodeList NodeListe_coordonnes_child = balise_coordonnes.getChildNodes();
 						String Coordonnes = ((Node) NodeListe_coordonnes_child.item(0)).getNodeValue();
+						Coordonnes = Coordonnes.substring(1, Coordonnes.length()); 
 				      	
 					NodeList NodeListe_SallesAdjacentes = balise_salle.getElementsByTagName("SallesAdjacentes");
 						Element balise_SallesAdjacentes = (Element) NodeListe_SallesAdjacentes.item(0);
@@ -80,8 +81,18 @@ public class Batiment {
 					NodeList NodeListe_SalleDepart = balise_salle.getElementsByTagName("SalleDepart");
 						Element balise_SalleDepart = (Element) NodeListe_SalleDepart.item(0);
 						NodeList NodeListe_SalleDepart_child = balise_SalleDepart.getChildNodes();						
-						boolean isSalleDepart = Boolean.parseBoolean(((Node) NodeListe_SalleDepart_child.item(0)).getNodeValue());
-					
+						String isSalleDep = ((Node) NodeListe_SalleDepart_child.item(0)).getNodeValue();
+						
+						boolean isSalleDepart = true;
+						if (isSalleDep.equals("Oui"))
+						{
+							isSalleDepart=true;
+							_listePremiereSalle.add(new Integer (IdSalle));
+						}
+						if (isSalleDep.equals("Non"))
+						{
+							isSalleDepart=false;
+						}
 					
 					String[] coord = Coordonnes.split("-");					
 					String[] _tabCoordonneesTemporaire = new String[coord.length];
@@ -97,10 +108,10 @@ public class Batiment {
 						_tabSallesAdjacentesTemporaire[i] = ""+salleproches[i];
 					}
 					
-					
-					salle = new Salle(IdSalle, NomSalle, AtoutSalle, false, _tabCoordonneesTemporaire, _tabSallesAdjacentesTemporaire, isSalleDepart);
+					salle = new Salle(IdSalle, NomSalle, AtoutSalle, isSalleDepart, _tabCoordonneesTemporaire, _tabSallesAdjacentesTemporaire, isSalleDepart);
 					_listeSalles.add(salle);
 				}
+				afficherListeSalles(_listeSalles);
 				return _listeSalles;
 			
 		} catch (Exception e) {
@@ -139,16 +150,10 @@ public class Batiment {
 				else
 					sallesAdjacentes += temp.get_tabSallesAdjacentes()[j]+"-";
 			}
-			System.out.println("Nom = "+nom+" et Id = "+id+" IsSalleDepart = "+_isSalleDepart+" et AtoutSalle = "+type+" et IsOccupe = "+isOccupe+" et Coordonnees =  "+coordonnees+" et SallesProches =  "+sallesAdjacentes+ " et AtoutSalle = "+aoutSalle);
 		}
 	}
 	
-	public static void main(String[] args){
-
-	}
-
 	public static void afficherBatiment(Batiment batiment) {
-		System.out.println("Le batiment \""+batiment._nomBatiment+"\" contient "+batiment._listeSalles.size()+" salles :\n");
 		afficherListeSalles(batiment._listeSalles);
 	}
 
@@ -168,11 +173,11 @@ public class Batiment {
 		this._listeSalles = _listeSalles;
 	}
 
-	public ArrayList<Salle> get_listePremiereSalle() {
+	public ArrayList<Integer> get_listePremiereSalle() {
 		return _listePremiereSalle;
 	}
 
-	public void set_listePremiereSalle(ArrayList<Salle> _listePremiereSalle) {
+	public void set_listePremiereSalle(ArrayList<Integer> _listePremiereSalle) {
 		this._listePremiereSalle = _listePremiereSalle;
 	}
 

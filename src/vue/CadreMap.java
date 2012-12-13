@@ -22,6 +22,8 @@ import model.Salle;
 public class CadreMap extends JPanel {
 
 	private Game game;
+	private ArrayList<Salle> sallePossedee = new ArrayList<Salle>();
+	private ArrayList<Salle> salleAttaquable = new ArrayList<Salle>();
 
 	public CadreMap(Game g) {
 		this.game = g;
@@ -35,7 +37,6 @@ public class CadreMap extends JPanel {
 	{
 		
 	}
-	
 	@Override
 	public void paint(Graphics g2) {
 		super.paint(g2);
@@ -68,43 +69,72 @@ public class CadreMap extends JPanel {
 
 				System.out.println(xQuot+"   :   "+yQuot);	
 									  
-				ArrayList newListe = game.get_batiment().get_listeSalles();
+				//ArrayList newListe = this.game.get_batiment().get_listeSalles();
 
-				g.setColor(Color.GREEN);
+				
 
-			    Polygon[] p = new Polygon[newListe.size()];
-
-				for(int i=0; i<newListe.size(); i++)
+				if (!sallePossedee.isEmpty())
 				{
-					p[i] = new Polygon();
-				    String coordo = "";
-				    Salle temp = (Salle) newListe.get(i);
-
-					for (int j=0; j<temp.get_tabCoordonnees().length; j++)
-					{
-					    String[] result = temp.get_tabCoordonnees()[j].split(":");
-					    for (int k=0; k<result.length; k++)
-					    {
-					    	int _x = Integer.parseInt(result[0]);
-					    	int _y = Integer.parseInt(result[1]);
-					    	
-					    	int x= (int) (xQuot*_x);
-					    	int y= (int) (yQuot*_y);
-					    	
-							p[i].addPoint(x, y);
-					    }
-					}
-					
-				    System.out.println(coordo);
-					
-
-				    String[] result = coordo.split(":");
-
-				    g.drawPolygon(p[i]);	//polygone bordure
-				    //g.fillPolygon(p[i]);	//polygone plein
+					g.setColor(Color.GREEN);
+					//System.out.println("##SallePossedee :: "+sallePossedee);
+				   this.dessinerSalle(g, sallePossedee, xQuot, yQuot);
 				}
+				
+				if (!salleAttaquable.isEmpty())
+				{
+					
+					g.setColor(Color.RED);
+					//System.out.println("##SalleAttaquable :: "+salleAttaquable);
+					 this.dessinerSalle(g, salleAttaquable, xQuot, yQuot);
+				}
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 	} 
+	
+	private void dessinerSalle(Graphics2D g, ArrayList<Salle> newListe, float xQuot, float yQuot)
+	{
+		//System.out.println("##New liste : "+newListe.size() +" : "+newListe);
+		 Polygon[] p = new Polygon[newListe.size()];
+		 
+			
+			for(int i=0; i<newListe.size(); i++)
+			{
+				p[i] = new Polygon();
+			    String coordo = "";
+			    Salle temp = (Salle) newListe.get(i);
+
+				for (int j=0; j<temp.get_tabCoordonnees().length; j++)
+				{
+				    String[] result = temp.get_tabCoordonnees()[j].split(";");
+				    
+				    for (int k=0; k<result.length; k++)
+				    {
+				    	String[] res = result[k].split(":");
+				    	int _x = Integer.parseInt(res[0]);
+				    	int _y = Integer.parseInt(res[1]);
+				    	
+				    	int x= (int) (xQuot*_x);
+				    	int y= (int) (yQuot*_y);
+				    	
+						p[i].addPoint(x, y);
+				    }
+				}
+
+			    g.drawPolygon(p[i]);	//polygone bordure
+			    //g.fillPolygon(p[i]);	//polygone plein
+			}
+	}
+	
+	public void dessinerSalleAttaquable(ArrayList<Salle> listSalle)
+	{
+		this.salleAttaquable = listSalle;
+	}
+	
+	public void dessinerSallePossedee(ArrayList<Salle> listSalle)
+	{
+		this.sallePossedee = listSalle;
+	}
 }

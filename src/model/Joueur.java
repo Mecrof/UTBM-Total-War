@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Joueur {
@@ -11,13 +12,15 @@ public class Joueur {
 	private int _idSpecialiteActif;
 	private int _effectifDispo;
 	private int _ptVictoire;
-	private LinkedList<Integer> _listIdSalleOccupee;
+	private ArrayList<Integer> _listIdSalleOccupee;
 	
 	public Joueur() {
 		this._nom = new String();
 		this._effectifDispo = 10;
 		this._ptVictoire = 5;
-		this._listIdSalleOccupee = new LinkedList<Integer>();
+		this._listIdSalleOccupee = new ArrayList<Integer>();
+		//_listIdSalleOccupee.add(new Integer(6));
+		//_listIdSalleOccupee.add(new Integer(18));
 	}
 
 	public String get_nom() {
@@ -60,11 +63,11 @@ public class Joueur {
 		this._ptVictoire = _ptVictoire;
 	}
 
-	public LinkedList<Integer> get_listIdSalleOccupee() {
+	public ArrayList<Integer> get_listIdSalleOccupee() {
 		return _listIdSalleOccupee;
 	}
 
-	public void set_listIdSalleOccupee(LinkedList<Integer> _listIdSalleOccupee) {
+	public void set_listIdSalleOccupee(ArrayList<Integer> _listIdSalleOccupee) {
 		this._listIdSalleOccupee = _listIdSalleOccupee;
 	}
 
