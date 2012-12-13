@@ -1,5 +1,6 @@
 package controleur;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -116,13 +117,25 @@ public class ControleurPlateForme implements ActionListener , ChangeListener, Mo
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if (this.plateforme.get_champsMap().get_polySalle()!=null)
-		for (int l = 0; l < this.plateforme.get_champsMap().get_polySalle().length; l++) {
-			
-			if (this.plateforme.get_champsMap().get_polySalle()[l].contains(e.getX(), e.getY())) {
-				System.out.println("Vous avez cliqué sur la salle : "
-						+ this.plateforme.get_champsMap().getSalleAttaquable().get(l).get_id());
+		{
+			boolean surligner = false;
+			for (int l = 0; l < this.plateforme.get_champsMap().get_polySalle().length; l++) {
+				
+				if (this.plateforme.get_champsMap().get_polySalle()[l].contains(e.getX(), e.getY())) 
+				{
+					surligner = true;
+					this.plateforme.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+					this.plateforme.get_champsMap().set_polySurligner(this.plateforme.get_champsMap().get_polySalle()[l]);
+				}
 			}
+			if (!surligner)
+			{
+				this.plateforme.setCursor(Cursor.getDefaultCursor());
+				this.plateforme.get_champsMap().set_polySurligner(null);
+			}
+			this.plateforme.get_champsMap().repaint();
 		}
+		
 	}
 
 	@Override

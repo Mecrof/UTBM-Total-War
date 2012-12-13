@@ -28,6 +28,7 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 	private ArrayList<Salle> sallePossedee = new ArrayList<Salle>();
 	private ArrayList<Salle> salleAttaquable = new ArrayList<Salle>();
 	private Polygon[] _polySalle;
+	private Polygon _polySurligner;
 	
 	public CadreMap(Game g) {
 		this.game = g;
@@ -125,7 +126,7 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 					
 					g.setColor(Color.RED);
 					//System.out.println("##SalleAttaquable :: "+salleAttaquable);
-					 this.dessinerSalle(g, salleAttaquable, xQuot, yQuot);
+					this.dessinerSalle(g, salleAttaquable, xQuot, yQuot);
 				}
 				
 			} catch (IOException e) {
@@ -163,9 +164,33 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 				    }
 				}
 
-			    g.drawPolygon(_polySalle[i]);	//polygone bordure
+				if (_polySurligner != null)
+				{
+					if(this.coordonneesEgales(_polySalle[i], _polySurligner))
+					{
+						g.setStroke(new BasicStroke (4.0f));
+						g.drawPolygon(_polySalle[i]);
+						g.setStroke(new BasicStroke (2.0f));
+					}
+					else
+						g.drawPolygon(_polySalle[i]);
+				}
+				else
+					g.drawPolygon(_polySalle[i]);	//polygone bordure
 			    //g.fillPolygon(p[i]);	//polygone plein
 			}
+	}
+	
+	private static boolean coordonneesEgales(Polygon p1, Polygon p2)
+	{
+		if (p1.npoints != p2.npoints)
+		{
+			return false;
+		}
+		for (int i = 0; i < p1.npoints ; ++i)
+			if (p1.xpoints[i]!=p2.xpoints[i] || p1.ypoints[i]!=p2.ypoints[i])
+				return false;
+		return true;
 	}
 	
 	public void dessinerSalleAttaquable(ArrayList<Salle> listSalle)
@@ -200,5 +225,13 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 
 	public void setSalleAttaquable(ArrayList<Salle> salleAttaquable) {
 		this.salleAttaquable = salleAttaquable;
+	}
+
+	public Polygon get_polySurligner() {
+		return _polySurligner;
+	}
+
+	public void set_polySurligner(Polygon _polySurligner) {
+		this._polySurligner = _polySurligner;
 	}
 }
