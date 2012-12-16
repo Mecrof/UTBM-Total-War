@@ -29,6 +29,8 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 	private ArrayList<Salle> salleAttaquable = new ArrayList<Salle>();
 	private Polygon[] _polySalle;
 	private Polygon _polySurligner;
+	private float xQuot;
+	private float yQuot;
 	
 	public CadreMap(Game g) {
 		this.game = g;
@@ -147,21 +149,30 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 			    String coordo = "";
 			    Salle temp = (Salle) newListe.get(i);
 
-				for (int j=0; j<temp.get_tabCoordonnees().length; j++)
+/*			    String[] coord = Coordonnes.split(";");
+				ArrayList<Integer[]> _listeCoordonneesTemporaire = new ArrayList<Integer[]>();
+				
+				for(int m=0; m<coord.length; m++)
+				{	
+					String[] coord1 = coord[m].split(":");
+					Integer[] tabCoordonnees = {0, 0};
+					tabCoordonnees[0] = Integer.parseInt(coord1[0]);
+					tabCoordonnees[1] = Integer.parseInt(coord1[1]);
+					_listeCoordonneesTemporaire.add(tabCoordonnees);
+				}
+*/				
+				
+				for (int j=0; j<temp.get_listeCoordonnees().size(); j++)
 				{
-				    String[] result = temp.get_tabCoordonnees()[j].split(";");
-				    
-				    for (int k=0; k<result.length; k++)
-				    {
-				    	String[] res = result[k].split(":");
-				    	int _x = Integer.parseInt(res[0]);
-				    	int _y = Integer.parseInt(res[1]);
+					Integer[] tabTemp = temp.get_listeCoordonnees().get(j);
+				    //String[] result = temp.get_listeCoordonnees().get(j).split(";");
+				    int _x = tabTemp[0];
+				    int _y = tabTemp[1];
 				    	
-				    	int x= (int) (xQuot*_x);
-				    	int y= (int) (yQuot*_y);
+				    int x= (int) (xQuot*_x);
+				    int y= (int) (yQuot*_y);
 				    	
-						_polySalle[i].addPoint(x, y);
-				    }
+					_polySalle[i].addPoint(x, y);				    
 				}
 
 				if (_polySurligner != null)
@@ -233,5 +244,21 @@ public class CadreMap extends JPanel {//implements MouseListener, MouseMotionLis
 
 	public void set_polySurligner(Polygon _polySurligner) {
 		this._polySurligner = _polySurligner;
+	}
+
+	public float getxQuot() {
+		return xQuot;
+	}
+
+	public void setxQuot(float xQuot) {
+		this.xQuot = xQuot;
+	}
+
+	public float getyQuot() {
+		return yQuot;
+	}
+
+	public void setyQuot(float yQuot) {
+		this.yQuot = yQuot;
 	}
 }

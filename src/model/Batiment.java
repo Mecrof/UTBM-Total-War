@@ -93,22 +93,27 @@ public class Batiment {
 						{
 							isSalleDepart=false;
 						}
+						
+					String[] coord = Coordonnes.split(";");
+					ArrayList<Integer[]> _listeCoordonneesTemporaire = new ArrayList<Integer[]>();
 					
-					String[] coord = Coordonnes.split("-");					
-					String[] _tabCoordonneesTemporaire = new String[coord.length];
-					for (int i=0; i<coord.length; i++)
-					{
-						_tabCoordonneesTemporaire[i] = ""+coord[i];
+					for(int m=0; m<coord.length; m++)
+					{	
+						String[] coord1 = coord[m].split(":");
+						Integer[] tabCoordonnees = {0, 0};
+						tabCoordonnees[0] = Integer.parseInt(coord1[0]);
+						tabCoordonnees[1] = Integer.parseInt(coord1[1]);
+						_listeCoordonneesTemporaire.add(tabCoordonnees);
 					}
 					
 					String[] salleproches = SallesAdjacentes.split("-");					
-					String[] _tabSallesAdjacentesTemporaire = new String[salleproches.length];
+					ArrayList<Integer> _listeSallesAdjacentesTemporaire = new ArrayList<Integer>();
 					for (int i=0; i<salleproches.length; i++)
 					{
-						_tabSallesAdjacentesTemporaire[i] = ""+salleproches[i];
+						_listeSallesAdjacentesTemporaire.add(Integer.parseInt(salleproches[i]));
 					}
 					
-					salle = new Salle(IdSalle, NomSalle, AtoutSalle, isSalleDepart, _tabCoordonneesTemporaire, _tabSallesAdjacentesTemporaire, isSalleDepart);
+					salle = new Salle(IdSalle, NomSalle, AtoutSalle, isSalleDepart, _listeCoordonneesTemporaire, _listeSallesAdjacentesTemporaire, isSalleDepart);
 					_listeSalles.add(salle);
 				}
 				afficherListeSalles(_listeSalles);
@@ -135,21 +140,26 @@ public class Batiment {
 			String aoutSalle = ""+temp.get_atoutSalle();
 			String _isSalleDepart = ""+temp.get_isSalleDepart();
 
-			for (int j=0; j<temp.get_tabCoordonnees().length; j++)
+			for (int j=0; j<temp.get_listeCoordonnees().size(); j++)
 			{
-				if (j==temp.get_tabCoordonnees().length-1)
-					coordonnees += temp.get_tabCoordonnees()[j];
-				else
-					coordonnees += temp.get_tabCoordonnees()[j]+"-";
+				Integer[] tabTemp = temp.get_listeCoordonnees().get(j);
+				
+				if (j==temp.get_listeCoordonnees().size()-1)					
+				{	coordonnees += tabTemp[0]+":"+tabTemp[1] ;
+				}
+				else{			
+					coordonnees += tabTemp[0]+":"+tabTemp[1]+";";
+				}
 			}
 			
-			for (int j=0; j<temp.get_tabSallesAdjacentes().length; j++)
+			for (int j=0; j<temp.get_listeSallesAdjacentes().size(); j++)
 			{
-				if (j==temp.get_tabSallesAdjacentes().length-1)
-					sallesAdjacentes += temp.get_tabSallesAdjacentes()[j];
+				if (j==temp.get_listeSallesAdjacentes().size()-1)
+					sallesAdjacentes += temp.get_listeSallesAdjacentes().get(j);
 				else
-					sallesAdjacentes += temp.get_tabSallesAdjacentes()[j]+"-";
+					sallesAdjacentes += temp.get_listeSallesAdjacentes().get(j)+"-";
 			}
+			System.out.println("Nom = "+nom+" et Id = "+id+" IsSalleDepart = "+_isSalleDepart+" et AtoutSalle = "+type+" et IsOccupe = "+isOccupe+" et Coordonnees =  "+coordonnees+" et SallesProches =  "+sallesAdjacentes+ " et AtoutSalle = "+aoutSalle);
 		}
 	}
 	

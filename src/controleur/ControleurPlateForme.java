@@ -1,6 +1,7 @@
 package controleur;
 
 import java.awt.Cursor;
+import java.awt.Polygon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -8,6 +9,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -49,46 +52,49 @@ public class ControleurPlateForme implements ActionListener , ChangeListener, Mo
 		{
 			_joueurCourant = 2;
 			this.plateforme.changementDeJoueur();
+			this.plateforme.repaint();
+			
 		}
 		else if (e.getSource().equals(plateforme.get_chj2().get_bPasseLeTour()))
 		{
 			_joueurCourant = 1;
 			this.plateforme.changementDeJoueur();
+			this.plateforme.repaint();
 		}
 	}
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		ArrayList<Salle> listSalleAttaquable;
-		ArrayList<Salle> listSallePossedee;
-		int effectif;
-		try{
-			if (_joueurCourant == 1)
+			ArrayList<Salle> listSalleAttaquable;
+			ArrayList<Salle> listSallePossedee;
+			int effectif;
+			try{
+				if (_joueurCourant == 1)
+				{
+					effectif = (int)this.plateforme.get_chj1().get_sNbJetonsEtudiants().getValue();
+					listSalleAttaquable = this.game.getSalleAttaquable(j1, effectif);
+					listSallePossedee = this.game.getSalles(j1.get_listIdSalleOccupee());
+				}
+				else
+				{
+					effectif = (int)this.plateforme.get_chj2().get_sNbJetonsEtudiants().getValue();
+					listSalleAttaquable = this.game.getSalleAttaquable(j2, effectif);
+					listSallePossedee = this.game.getSalles(j2.get_listIdSalleOccupee());
+				}
+				System.out.println("lAt: "+listSalleAttaquable);
+				if (listSallePossedee != null)
+					this.plateforme.get_champsMap().dessinerSallePossedee(listSallePossedee);
+				else
+					this.plateforme.get_champsMap().dessinerSallePossedee(new ArrayList<Salle>());
+				if (listSalleAttaquable != null)
+					this.plateforme.get_champsMap().dessinerSalleAttaquable(listSalleAttaquable);
+				else
+					this.plateforme.get_champsMap().dessinerSalleAttaquable(new ArrayList<Salle>());
+				this.plateforme.get_champsMap().repaint();
+			}catch(Exception ex)
 			{
-				effectif = (int)this.plateforme.get_chj1().get_sNbJetonsEtudiants().getValue();
-				listSalleAttaquable = this.game.getSalleAttaquable(j1, effectif);
-				listSallePossedee = this.game.getSalles(j1.get_listIdSalleOccupee());
+				System.out.println(ex.getMessage());
 			}
-			else
-			{
-				effectif = (int)this.plateforme.get_chj2().get_sNbJetonsEtudiants().getValue();
-				listSalleAttaquable = this.game.getSalleAttaquable(j2, effectif);
-				listSallePossedee = this.game.getSalles(j2.get_listIdSalleOccupee());
-			}
-			System.out.println("lAt: "+listSalleAttaquable);
-			if (listSallePossedee != null)
-				this.plateforme.get_champsMap().dessinerSallePossedee(listSallePossedee);
-			else
-				this.plateforme.get_champsMap().dessinerSallePossedee(new ArrayList<Salle>());
-			if (listSalleAttaquable != null)
-				this.plateforme.get_champsMap().dessinerSalleAttaquable(listSalleAttaquable);
-			else
-				this.plateforme.get_champsMap().dessinerSalleAttaquable(new ArrayList<Salle>());
-			this.plateforme.get_champsMap().repaint();
-		}catch(Exception ex)
-		{
-			System.out.println(ex.getMessage());
-		}
 
 		//this.plateforme.get_champsMap().afficherSalleAttaquable(listSalle);
 	}
@@ -96,11 +102,42 @@ public class ControleurPlateForme implements ActionListener , ChangeListener, Mo
 	public void mouseClicked(MouseEvent e) {
 		try
 		{
-			for (int l = 0; l < this.plateforme.get_champsMap().get_polySalle().length; l++) {
-		
-				if (this.plateforme.get_champsMap().get_polySalle()[l].contains(e.getX(), e.getY())) {
-					System.out.println("Vous avez cliqué sur la salle : "
-							+ this.plateforme.get_champsMap().getSalleAttaquable().get(l).get_id());
+			ArrayList<Salle> listSalleAttaquable = this.plateforme.get_champsMap().getSalleAttaquable();
+			if (!listSalleAttaquable.isEmpty())
+			{
+				for (int i = 0; i < this.plateforme.get_champsMap().get_polySalle().length; i++) {
+			
+					if (this.plateforme.get_champsMap().get_polySalle()[i].contains(e.getX(), e.getY())) {
+						//<RULES>
+						
+						Salle s = listSalleAttaquable.get(i);
+						int nombreEngage;
+						SpinnerNumberModel sm;
+						if(this._joueurCourant == 1)
+						{
+							nombreEngage = (int)(this.plateforme.get_chj1().get_sNbJetonsEtudiants().getValue());
+							this.j1.set_effectifDispo(this.j1.get_effectifDispo()-nombreEngage);
+							this.j1.get_listIdSalleOccupee().add(s.get_id());
+							sm = (SpinnerNumberModel) this.plateforme.get_chj1().get_sNbJetonsEtudiants().getModel();
+							sm.setMaximum(this.j1.get_effectifDispo());
+						}
+						else
+						{
+							nombreEngage = (int)(this.plateforme.get_chj2().get_sNbJetonsEtudiants().getValue());
+							this.j2.set_effectifDispo(this.j2.get_effectifDispo()-nombreEngage);
+							this.j2.get_listIdSalleOccupee().add(s.get_id());
+							sm = (SpinnerNumberModel) this.plateforme.get_chj2().get_sNbJetonsEtudiants().getModel();
+							sm.setMaximum(this.j2.get_effectifDispo());
+						}
+						s.set_nombreOccupant(nombreEngage);
+						sm.setValue(0);
+						this.plateforme.repaint();
+						//</RULES>
+						
+						
+						//System.out.println("Vous avez cliqué sur la salle : "
+						//		+ this.plateforme.get_champsMap().getSalleAttaquable().get(i).get_id());
+					}
 				}
 			}
 			//this.plateforme.get_champsMap().repaint();

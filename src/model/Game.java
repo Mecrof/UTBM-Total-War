@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Polygon;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -43,15 +44,17 @@ public class Game {
 			{
 				if (effectifEngage >= 2)
 				{
-					for (int i = 0; i < salle.get_tabSallesAdjacentes().length ; ++i)
+					for (int i = 0; i < salle.get_listeSallesAdjacentes().size(); ++i)
 					{
-						Salle s = this.getSalle(Integer.parseInt(salle.get_tabSallesAdjacentes()[i]));
-						if (!listSalle.contains(s))
-						{
-							System.out.println("## Salle:"+s);
-							if (this.isAttaquable(s, effectifEngage))
-								listSalle.add(s);
-						}
+						Salle s = this.getSalle(salle.get_listeSallesAdjacentes().get(i));
+						if (s.get_nombreOccupant()<effectifEngage) //////////////////////////// CHANGER PLUS TARD, METTRE <=
+							if (!joueur.get_listIdSalleOccupee().contains(s.get_id()))
+								if (!listSalle.contains(s))
+								{
+									//System.out.println("## Salle:"+s);
+									if (this.isAttaquable(s, effectifEngage))
+										listSalle.add(s);
+								}
 							
 					}
 					/*
@@ -63,7 +66,7 @@ public class Game {
 				}
 			}
 		}
-		System.out.println("## listeSalle :"+listSalle);
+		//System.out.println("## listeSalle :"+listSalle);
 		if (listSalle.isEmpty())
 			return null;
 		else
@@ -279,101 +282,67 @@ public class Game {
 		return list;
 	}
 	
-public LinkedList<String> afficherListeSalles() {
-		
-		String[] dir = new File("maps").list();
-		LinkedList<String> ListBatiment = new LinkedList<String>();;
-		for (int i=0; i<dir.length; i++)
-		{
-			if (dir[i].endsWith(".png") == true)
-	    	{
-				System.out.println(dir[i]);
-				ListBatiment.add(dir[i]);
-	    	}
+	public LinkedList<String> afficherListeSalles() {
+			
+			String[] dir = new File("maps").list();
+			LinkedList<String> ListBatiment = new LinkedList<String>();;
+			for (int i=0; i<dir.length; i++)
+			{
+				if (dir[i].endsWith(".png") == true)
+		    	{
+					System.out.println(dir[i]);
+					ListBatiment.add(dir[i]);
+		    	}
+			}
+			return ListBatiment;
 		}
-		return ListBatiment;
-	}
-
-public Joueur getJ1() {
-	return j1;
-}
-
-public void setJ1(Joueur j1) {
-	this.j1 = j1;
-}
-
-public Joueur getJ2() {
-	return j2;
-}
-
-public void setJ2(Joueur j2) {
-	this.j2 = j2;
-}
-
-public Batiment get_batiment() {
-	return _batiment;
-}
-
-public void set_batiment(Batiment _batiment) {
-	this._batiment = _batiment;
-}
-
-public ArrayList<TypeEtudiant> get_listEtudiant() {
-	return _listEtudiant;
-}
-
-public void set_listEtudiant(ArrayList<TypeEtudiant> _listEtudiant) {
-	this._listEtudiant = _listEtudiant;
-}
-
-public ArrayList<TypeSpecialite> get_listSpecialite() {
-	return _listSpecialite;
-}
-
-public void set_listSpecialite(ArrayList<TypeSpecialite> _listSpecialite) {
-	this._listSpecialite = _listSpecialite;
-}
-
-public boolean IsOver() {
-	return _isOver;
-}
-
-public void setIsOver(boolean _isOver) {
-	this._isOver = _isOver;
-}
-
 	
-	/*
-	 * public Game() {
-	 * 
-	 * }
-	 * 
-	 * public void genererGraphe(String cheminFichier) { //// A FAIRE : appeller
-	 * le generer de Batiment }
-	 * 
-	 * public void affecterEffet(Joueur joueur, Salle salle) { //// A FAIRE }
-	 * 
-	 * public LinkedList<TypeEtudiant> get_listEtudiant() { return
-	 * _listEtudiant; }
-	 * 
-	 * public void set_listEtudiant(LinkedList<TypeEtudiant> _listEtudiant) {
-	 * this._listEtudiant = _listEtudiant; }
-	 * 
-	 * public LinkedList<TypeSpecialite> get_listSpecialite() { return
-	 * _listSpecialite; }
-	 * 
-	 * public void set_listSpecialite(LinkedList<TypeSpecialite>
-	 * _listSpecialite) { this._listSpecialite = _listSpecialite; }
-	 * 
-	 * public LinkedList<Joueur> get_joueurs() { return _joueurs; }
-	 * 
-	 * public void set_joueurs(LinkedList<Joueur> _joueurs) { this._joueurs =
-	 * _joueurs; }
-	 * 
-	 * public Batiment get_batiment() { return _batiment; }
-	 * 
-	 * public void set_batiment(Batiment _batiment) { this._batiment =
-	 * _batiment; }
-	 */
+	public Joueur getJ1() {
+		return j1;
+	}
+	
+	public void setJ1(Joueur j1) {
+		this.j1 = j1;
+	}
+	
+	public Joueur getJ2() {
+		return j2;
+	}
+	
+	public void setJ2(Joueur j2) {
+		this.j2 = j2;
+	}
+	
+	public Batiment get_batiment() {
+		return _batiment;
+	}
+	
+	public void set_batiment(Batiment _batiment) {
+		this._batiment = _batiment;
+	}
+	
+	public ArrayList<TypeEtudiant> get_listEtudiant() {
+		return _listEtudiant;
+	}
+	
+	public void set_listEtudiant(ArrayList<TypeEtudiant> _listEtudiant) {
+		this._listEtudiant = _listEtudiant;
+	}
+	
+	public ArrayList<TypeSpecialite> get_listSpecialite() {
+		return _listSpecialite;
+	}
+	
+	public void set_listSpecialite(ArrayList<TypeSpecialite> _listSpecialite) {
+		this._listSpecialite = _listSpecialite;
+	}
+	
+	public boolean IsOver() {
+		return _isOver;
+	}
+	
+	public void setIsOver(boolean _isOver) {
+		this._isOver = _isOver;
+	}
 
 }

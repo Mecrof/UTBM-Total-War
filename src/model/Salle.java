@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Salle {
 
 	private int _id;
@@ -8,19 +10,24 @@ public class Salle {
 	private boolean _isOccupe;
 	private int _nombreOccupant;
 	private boolean _isSalleDepart;
-	private String[] _tabCoordonnees;
-	private String[] _tabSallesAdjacentes;
-	
 
-	public Salle(int id, String nom, String atoutSalle, boolean isOccupe, String[] _tabCoordonnees, String[] tabSallesAdjacentes, boolean isSalleDepart) {
+	private ArrayList<Integer[]> _listeCoordonnees=new ArrayList();
+	private ArrayList<Integer> _listeSallesAdjacentes;
+	
+	public Salle(int id, String nom, String atoutSalle, boolean isOccupe, ArrayList<Integer[]> listeCoordonnees, ArrayList<Integer> listeSallesAdjacentes, boolean isSalleDepart) {
 		this._id = id;
 		this._nom = nom;
 		this._atoutSalle = atoutSalle;
 		this._isOccupe = isOccupe;
 		this._nombreOccupant = 0;
-		this._tabCoordonnees = _tabCoordonnees;
-		this._tabSallesAdjacentes = tabSallesAdjacentes;
+		this._listeCoordonnees = listeCoordonnees;
+		this._listeSallesAdjacentes = listeSallesAdjacentes;
 		this._isSalleDepart = isSalleDepart;
+	}
+	
+	@Override
+	public String toString() {
+		return "Salle: id:"+_id+" - nom:"+_nom+" - atout:"+_atoutSalle+" - nbreOccupant:"+_nombreOccupant;
 	}
 	
 	public int get_id() {
@@ -39,12 +46,12 @@ public class Salle {
 		return _isOccupe;
 	}
 	
-	public String[] get_tabCoordonnees() {
-		return _tabCoordonnees;
+	public ArrayList<Integer[]> get_listeCoordonnees() {
+		return _listeCoordonnees;
 	}
 	
-	public String[] get_tabSallesAdjacentes() {
-		return _tabSallesAdjacentes;
+	public ArrayList<Integer> get_listeSallesAdjacentes() {
+		return _listeSallesAdjacentes;
 	}
 	
 	public boolean get_isSalleDepart() {
